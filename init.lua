@@ -60,9 +60,9 @@ return {
       "romgrk/nvim-treesitter-context",
       config = function()
         require("treesitter-context").setup {
-          enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+          enable = true,   -- Enable this plugin (Can be enabled/disabled later via commands)
           throttle = true, -- Throttles plugin updates (may improve performance)
-          max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+          max_lines = 0,   -- How many lines the window should span. Values <= 0 mean no limit.
           patterns = {
             -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
             -- For all filetypes
@@ -78,21 +78,6 @@ return {
         }
       end,
     },
-    -- You must install glow globally
-    -- https://github.com/charmbracelet/glow
-    -- yay -S glow
-    {
-      "npxbr/glow.nvim",
-      name = "glow",
-      ft = { "markdown" },
-      -- build = "yay -S glow",
-      config = function()
-        require("Glow").setup() {
-          style = "dark",
-          width = 120,
-        }
-      end,
-    },
     {
       "jbyuki/nabla.nvim",
       name = "nabla",
@@ -103,15 +88,15 @@ return {
       build = "deno task --quiet build:fast",
       config = function()
         require("peek").setup() {
-          auto_load = true, -- whether to automatically load preview when entering another markdown buffer
-          close_on_bdelete = true, -- close preview window on buffer delete
-          syntax = true, -- enable syntax highlighting, affects performance
-          theme = "dark", -- 'dark' or 'light'
-          update_on_change = true, -- whether or not to make updates as you change the file
+          auto_load = true,                     -- whether to automatically load preview when entering another markdown buffer
+          close_on_bdelete = true,              -- close preview window on buffer delete
+          syntax = true,                        -- enable syntax highlighting, affects performance
+          theme = "dark",                       -- 'dark' or 'light'
+          update_on_change = true,              -- whether or not to make updates as you change the file
           app = { "chromium", "--new-window" }, -- what app to open preview in
-          filetype = { "markdown" }, -- list of filetypes to recognize as markdown relevant if update_on_change is true
-          throttle_at = 200000, -- start throttling when file exceeds this amount of bytes in size
-          throttle_time = "auto", -- minimum amount of time in milliseconds that has to pass before starting new render
+          filetype = { "markdown" },            -- list of filetypes to recognize as markdown relevant if update_on_change is true
+          throttle_at = 200000,                 -- start throttling when file exceeds this amount of bytes in size
+          throttle_time = "auto",               -- minimum amount of time in milliseconds that has to pass before starting new render
         }
       end,
     },
@@ -144,8 +129,23 @@ return {
       end,
     },
     {
+      "simrat39/rust-tools.nvim",
+    },
+    {
+      "williamboman/mason-lspconfig.nvim",
+      opts = {
+        ensure_installed = { "rust_analyzer" },
+      },
+    },
+    {
+      "lervag/vimtex",
+    },
+    {
+      "jalvesaq/Nvim-R",
+    },
+    {
       "goolord/alpha-nvim",
-      opts = function(_, opts) -- override the options using lazy.nvim
+      opts = function(_, opts)      -- override the options using lazy.nvim
         opts.section.header.val = { -- change the header section value
           "                                                                                   ",
           "     /\\__\\         /\\  \\         /\\  \\         /\\__\\          ___        /\\__\\     ",
@@ -165,6 +165,9 @@ return {
   },
 
   lsp = {
+    setup_handlers = {
+      rust_analyzer = function(_, opts) require("rust-tools").setup { server = opts } end,
+    },
     config = {
       clangd = {
         capabilities = { offsetEncoding = "utf-8" },
@@ -172,7 +175,7 @@ return {
     },
     formatting = {
       format_on_save = {
-        enabled = true, -- enable format on save
+        enabled = true,      -- enable format on save
         ignore_filetypes = { -- disable format on save for specified filetypes
           "markdown",
           "python",
