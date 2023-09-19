@@ -1,5 +1,15 @@
 local utils = require "astronvim.utils"
 
+local alpha_neovide = function() return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8))) end
+vim.g.neovide_transparency = 0.0
+vim.g.transparency = 0.85
+vim.g.neovide_background_color = "#0f1117" .. alpha_neovide()
+vim.g.neovide_theme = "auto"
+vim.g.neovide_confirm_quit = true
+vim.g.neovide_input_macos_alt_is_meta = true
+
+vim.o.guifont = "FiraCode Nerd Font Mono:h18"
+
 return {
   colorscheme = "catppuccin",
 
@@ -7,8 +17,17 @@ return {
     {
       "catppuccin/nvim",
       name = "catppuccin",
-      config = function() require("catppuccin").setup {} end,
+      config = {
+        flavour = "mocha",
+        background = {
+          light = "latte",
+          dark = "mocha",
+        },
+        transparent_background = true,
+      },
     },
+    { "folke/zen-mode.nvim" },
+    { "imsnif/kdl.vim" },
     {
       "folke/trouble.nvim",
       name = "Trouble",
@@ -20,7 +39,9 @@ return {
       config = function()
         require("bqf").setup {
           auto_enable = true,
+          ---@diagnostic disable-next-line: missing-fields
           preview = {
+            auto_preview = true,
             win_height = 12,
             win_vheight = 12,
             delay_syntax = 80,
@@ -53,9 +74,7 @@ return {
       "JoosepAlviste/nvim-ts-context-commentstring",
       event = "BufRead",
     },
-    {
-      "mrjones2014/nvim-ts-rainbow",
-    },
+    { "mrjones2014/nvim-ts-rainbow" },
     {
       "romgrk/nvim-treesitter-context",
       config = function()
@@ -128,41 +147,60 @@ return {
         }
       end,
     },
-    {
-      "simrat39/rust-tools.nvim",
-    },
+    { "simrat39/rust-tools.nvim" },
     {
       "williamboman/mason-lspconfig.nvim",
       opts = {
         ensure_installed = { "rust_analyzer" },
       },
     },
-    {
-      "lervag/vimtex",
-    },
+    { "lervag/vimtex" },
     {
       "nvim-neorg/neorg",
+      name = "neorg",
       lazy = false,
       build = ":Neorg sync-parsers",
       dependencies = { "nvim-lua/plenary.nvim" },
       config = function()
         require("neorg").setup {
           load = {
-            ["core.defaults"] = {}, -- Loads default behaviour
-            ["core.concealer"] = {}, -- Adds pretty icons to your documents
-            ["core.dirman"] = { -- Manages Neorg workspaces
+            ["core.defaults"] = {},
+            ["core.esupports.metagen"] = {},
+            ["core.concealer"] = {},
+            ["core.dirman"] = {
               config = {
                 workspaces = {
                   notes = "~/neorg/notes",
+                  work = "~/neorg/work",
                 },
+                default_workspace = "notes",
               },
             },
+            ["core.export"] = {
+              config = {
+                export_dir = "~/Documents/norg_notes",
+              },
+            },
+            ["core.export.markdown"] = {},
+            ["core.summary"] = {},
+            ["core.presenter"] = {
+              config = {
+                zen_mode = "zen-mode",
+              },
+            },
+            ["core.ui"] = {},
+            ["core.ui.calendar"] = {},
           },
         }
+
+        vim.wo.foldlevel = 99
+        vim.wo.conceallevel = 2
       end,
     },
+    { "jalvesaq/Nvim-R" },
     {
-      "jalvesaq/Nvim-R",
+      "rcarriga/nvim-notify",
+      opts = function(_, opts) opts.background_colour = "#000000" end,
     },
     {
       "goolord/alpha-nvim",
