@@ -154,7 +154,23 @@ return {
         ensure_installed = { "rust_analyzer" },
       },
     },
-    { "lervag/vimtex" },
+    { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
+    {
+      "lervag/vimtex",
+      lazy = false,
+      config = function()
+        vim.api.nvim_create_autocmd({ "FileType " }, {
+          group = vim.api.nvim_create_augroup("lazyvim_vimtex_conceal", { clear = true }),
+          pattern = { "bib", "tex" },
+          callback = function() vim.wo.conceallevel = 2 end,
+        })
+        vim.g.vimtex_view_method = "skim"
+        vim.g.vimtex_view_skim_sync = 1
+        vim.g.vimtex_view_skim_activate = 1
+
+        vim.g.vimtex_quickfix_method = vim.fn.executable "pplatex" == 1 and "pplatex" or "latexlog"
+      end,
+    },
     {
       "nvim-neorg/neorg",
       name = "neorg",
@@ -263,6 +279,11 @@ return {
         end,
         desc = "Close buffer",
       },
+      -- latex-tools
+      ["<leader>L"] = { name = " Latex" },
+      ["<leader>Lt"] = { "<cmd> VimtexCompile<cr>", desc = "Toggle Compiling" },
+      ["<leader>Lv"] = { "<cmd> VimtexView<cr>", desc = "View PDF" },
+      ["<leader>Lr"] = { "<cmd> VimtexReload<cr>", desc = "Reload Vimtex" },
       -- haskell-tools
       ["<leader>H"] = { name = " Haskell" },
       ["<leader>Hc"] = {
